@@ -1,0 +1,23 @@
+.boardContainer{
+    display: inline-block;
+}
+
+.board {
+    height: 74vh;
+    width: 74vh;
+    padding: 0.9vh;
+    background: grey;
+    display: grid;
+    grid-template-rows: repeat(14, 1fr);
+    grid-template-columns: repeat(14, 1fr);
+    column-gap: 0.20vh;
+    row-gap: 0.20vh;
+}
+
+.square {
+    height: 4vh;
+    width: 4vh;
+    border: 0.10vh solid black;
+    border-radius: 4px;
+    margin: 0;
+}
