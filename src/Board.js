@@ -2,39 +2,35 @@ import Square from './Square';
 import { useState } from 'react';
 import bfsMatrix from './algorithms/bfs'
 import { COLORS } from './config';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 
-let ROWS = 14
-let COLS = 14
+const ROWS = 17
+const COLS = 17
 
-let EMPTY_MATRIX = new Array(ROWS).fill().map(() => new Array(COLS).fill(COLORS.COLOR_INIT))
-let SEARCH_BUTTON_TEXT = {
+const EMPTY_MATRIX = new Array(ROWS).fill().map(() => new Array(COLS).fill(COLORS.COLOR_INIT))
+const SEARCH_BUTTON_TEXT = {
     true: "SEARCHING...",
     false: "SEARCH"
 }
 
 let animate_list = []
 let path_list = []
-let path_list_i = 0
-let animate_list_i = 0
-
-function getSquareMatrix(matrix) {
-    let nmatrix = new Array(matrix.length).fill();
-    for (let r = 0; r < matrix.length; r++) {
-        nmatrix[r] = [...matrix[r]];
-    }
-    return nmatrix;
-}
 
 const Board = () => {
-    const [squares, setSquares] = useState(EMPTY_MATRIX);
+    const [squares, setSquares] = useState(cloneDeep(EMPTY_MATRIX));
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
     const [searchState, setSearchState] = useState([false, "SEARCH"]);
+    // TODO: Check if path and traversal order can used/modified directly.
     const [path, setPath] = useState([]);
     const [traversalOrder, setTraversalOrder] = useState([[]]);
 
-    // deep copy the original grid.
+    function resetState() {
+        setStart(null);
+        setEnd(null);
+        setSquares(cloneDeep(EMPTY_MATRIX));
+        setSearchState([false, "SEARCH"]);
+    }
 
     const clickHandler = ([x, y]) => {
         // no modifications allowed while searching.
@@ -46,12 +42,15 @@ const Board = () => {
         y = parseInt(y);
 
         // toggle the seen status of a cell.
-        let grid = getSquareMatrix(squares);
+        let grid = [...squares];
         if (!start) {
             setStart([x, y]);
             grid[x][y] = COLORS.COLOR_START;
 
         } else if (!end) {
+            if (isEqual([x, y], start)) {
+                return;
+            }
             setEnd([x, y]);
             grid[x][y] = COLORS.COLOR_END
 
@@ -80,10 +79,8 @@ const Board = () => {
             }
             setSearchState(newSearchState);
             let { traversal_order, pp } = bfsMatrix(squares, start, end);
-            path_list = getSquareMatrix(pp);
+            path_list = cloneDeep(pp);
             animate_list = traversal_order;
-
-            console.log("Calling animation frame")
             animate();
         }
     }
@@ -111,6 +108,7 @@ const Board = () => {
                 <span>START: {start ? `[${start[0]}, ${start[1]}]` : "Select starting point."}</span><br />
                 <span>END: {end ? `[${end[0]}, ${end[1]}]` : "Select final point."}</span><br />
                 <button onClick={beginSearch}>{searchState[1]}</button><br />
+                <button onClick={resetState}>Reset</button><br />
             </div>
             <div className="board">
                 {

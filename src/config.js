@@ -6,6 +6,11 @@ export const COLORS = {
     COLOR_END: "red"
 };
 
+export const BOARD_DIMENSIONS = {
+    rows: 17,
+    cols: 17
+}
+
 export const DIRECTIONS = [
     [-1, 0], // top
     [0, 1], // right
