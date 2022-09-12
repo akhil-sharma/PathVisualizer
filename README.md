@@ -3,7 +3,7 @@
 A react.js app to visualize pathfinding algorithms in action.
 
 ## Motivation
-I am just playing around with react and visualizing the pathfinding algorithms seem like and interesting problem.
+I am just playing around with react, and visualizing the pathfinding algorithms seem like and interesting problem.
 
 ## How to Run it?
 To use the app, run the following commands in your terminal.
